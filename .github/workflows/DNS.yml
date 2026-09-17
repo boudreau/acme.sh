@@ -21,7 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       hasToken: ${{ steps.step_one.outputs.hasToken }}
-      hasDnsConfig: ${{ steps.step_one.outputs.hasDnsConfig }}
     steps:
       - name: Set the value
         id: step_one
@@ -31,15 +30,8 @@ jobs:
           else
             echo "hasToken=false" >> "$GITHUB_OUTPUT"
           fi
-          if [ "${{ secrets.TEST_DNS }}" ] && [ "${{ secrets.TestingDomain }}" ] && [ "${{ secrets.TEST_DNS }}" != "dns_myapi" ] && [ "${{ secrets.TEST_DNS }}" != "myapi" ] ; then
-            echo "hasDnsConfig=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "hasDnsConfig=false" >> "$GITHUB_OUTPUT"
-          fi
       - name: Check the value
-        run: |
-          echo "${{ steps.step_one.outputs.hasToken }}"
-          echo "${{ steps.step_one.outputs.hasDnsConfig }}"
+        run: echo ${{ steps.step_one.outputs.hasToken }}
 
   Fail:
     runs-on: ubuntu-latest
@@ -56,7 +48,7 @@ jobs:
   Docker:
     runs-on: ubuntu-latest
     needs: CheckToken
-    if: "contains(needs.CheckToken.outputs.hasToken, 'true') && contains(needs.CheckToken.outputs.hasDnsConfig, 'true')"
+    if: "contains(needs.CheckToken.outputs.hasToken, 'true')"
     env:
       TEST_DNS : ${{ secrets.TEST_DNS }}
       TestingDomain: ${{ secrets.TestingDomain }}
