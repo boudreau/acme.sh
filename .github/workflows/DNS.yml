@@ -25,16 +25,13 @@ jobs:
     steps:
       - name: Set the value
         id: step_one
-        env:
-          CHECK_TEST_DNS: ${{ secrets.TEST_DNS }}
-          CHECK_TESTING_DOMAIN: ${{ secrets.TestingDomain }}
         run: |
           if [ "${{secrets.TokenName1}}" ] ; then
             echo "hasToken=true" >> "$GITHUB_OUTPUT"
           else
             echo "hasToken=false" >> "$GITHUB_OUTPUT"
           fi
-          if [ "$CHECK_TEST_DNS" ] && [ "$CHECK_TESTING_DOMAIN" ] && [ "$CHECK_TEST_DNS" != "dns_myapi" ] && [ "$CHECK_TEST_DNS" != "myapi" ] && [ "$CHECK_TESTING_DOMAIN" != "example.com" ] && [ "$CHECK_TESTING_DOMAIN" != "example.org" ] && [ "$CHECK_TESTING_DOMAIN" != "example.net" ] ; then
+          if [ "${{ secrets.TEST_DNS }}" ] && [ "${{ secrets.TestingDomain }}" ] && [ "${{ secrets.TEST_DNS }}" != "dns_myapi" ] && [ "${{ secrets.TEST_DNS }}" != "myapi" ] && [ "${{ secrets.TestingDomain }}" != "example.com" ] && [ "${{ secrets.TestingDomain }}" != "example.org" ] && [ "${{ secrets.TestingDomain }}" != "example.net" ] ; then
             echo "hasDnsConfig=true" >> "$GITHUB_OUTPUT"
           else
             echo "hasDnsConfig=false" >> "$GITHUB_OUTPUT"
